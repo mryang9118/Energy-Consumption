@@ -8,14 +8,14 @@ from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor
 from sklearn.model_selection import train_test_split, ShuffleSplit, cross_validate
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-import keras
-from keras.layers import Dense
-from keras.wrappers.scikit_learn import KerasRegressor
+from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
 
 
 def do_kfold(model):
     cv = ShuffleSplit(n_splits=10, test_size=0.5, random_state=2)
-    results = cross_validate(estimator=model, X=X, y=y, cv=cv, scoring=['neg_mean_absolute_error', 'r2'], n_jobs=-1)
+    results = cross_validate(estimator=model, X=X, y=y, cv=cv, scoring=['neg_mean_absolute_error', 'r2'])
     mae_values = results['test_neg_mean_absolute_error']
     r2_scores = results['test_r2']
     return mae_values, r2_scores
@@ -55,15 +55,15 @@ warnings.filterwarnings(action="ignore")
 pd.set_option('display.width', 200)
 pd.set_option('display.max_columns', 20)
 
-old_path = "./data files/data.csv"
-new_path = "./data files/new_data.csv"
+old_path = "./volkswagen_e_golf.csv"
+new_path = "./volkswagen_e_golf_clean.csv"
 
 
 """remove missing values (comment it after the first run)"""
-ds = pd.read_csv(filepath_or_buffer=old_path)
-ds = ds[pd.notnull(obj=ds['quantity(kWh)'])]
-ds = ds[pd.notnull(obj=ds['avg_speed(km/h)'])]
-ds.to_csv(path_or_buf=new_path)
+# ds = pd.read_csv(filepath_or_buffer=old_path)
+# ds = ds[pd.notnull(obj=ds['quantity(kWh)'])]
+# ds = ds[pd.notnull(obj=ds['avg_speed(km/h)'])]
+# ds.to_csv(path_or_buf=new_path)
 
 
 """load the data"""
@@ -71,8 +71,8 @@ dataset = pd.read_csv(filepath_or_buffer=new_path)
 # print(dataset.head(n=5))
 # print(dataset.describe())
 
-X = dataset.iloc[:, 5:14].values
-y = dataset.iloc[:, 14].values
+X = dataset.iloc[:, 5:15].values
+y = dataset.iloc[:, 4].values
 
 # if the data has only one feature, reshape it
 # X = np.reshape(X, newshape=(-1, 1))
@@ -163,7 +163,7 @@ report_results(training_pred=ab_train_pred, test_pred=ab_test_pred)
 
 """define the deep multi-layer perceptron model"""
 def build_regressor():
-    regressor = keras.models.Sequential()
+    regressor = Sequential()
     regressor.add(Dense(units=100, kernel_initializer='uniform', activation='relu', input_dim=len(X[0])))
     regressor.add(Dense(units=50, kernel_initializer='uniform', activation='relu'))
     regressor.add(Dense(units=25, kernel_initializer='uniform', activation='relu'))
@@ -211,7 +211,7 @@ plt.show()
 
 
 """plot driving range based on the average speed"""
-avg_speed = X[:, 9]
+avg_speed = X[:, 10]
 avg_speed = np.reshape(avg_speed, newshape=(-1, 1))
 
 speed_linear_reg = LinearRegression()

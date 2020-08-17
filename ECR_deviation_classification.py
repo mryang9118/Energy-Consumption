@@ -7,14 +7,13 @@ from sklearn import svm
 from sklearn.neural_network import MLPClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score
-import keras
-from keras.layers import Dense
-from keras.wrappers.scikit_learn import KerasClassifier
-
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 
 def do_kfold(model):
     cv = ShuffleSplit(n_splits=10, test_size=0.25, random_state=41)
-    acc_scores = cross_val_score(estimator=model, X=X, y=y, scoring='balanced_accuracy', n_jobs=-1, cv=cv)
+    acc_scores = cross_val_score(estimator=model, X=X, y=y, scoring='balanced_accuracy', cv=cv)
     print('accuracy scores:', acc_scores)
     print("average accuracy score (bias) is:", abs(round(number=acc_scores.mean() * 100, ndigits=3)))
     print("std deviation of MAE scores (variance) is:", round(number=acc_scores.std() * 100, ndigits=3))
@@ -40,16 +39,16 @@ warnings.filterwarnings(action="ignore")
 pd.set_option('display.width', 200)
 pd.set_option('display.max_columns', 20)
 
-old_path = "./data files/data_2.csv"
-new_path = "./data files/new_data_2.csv"
+old_path = "./volkswagen_e_golf_clean.csv"
+new_path = "./new_volkswagen_e_golf.csv"
 
 
 """remove missing values (comment it after the first run)"""
-ds = pd.read_csv(filepath_or_buffer=old_path)
-ds = ds[pd.notnull(obj=ds['quantity(kWh)'])]
-ds = ds[pd.notnull(obj=ds['avg_speed(km/h)'])]
-ds = ds[pd.notnull(obj=ds['consumption(kWh/100km)'])]
-ds.to_csv(path_or_buf=new_path)
+# ds = pd.read_csv(filepath_or_buffer=old_path)
+# ds = ds[pd.notnull(obj=ds['quantity(kWh)'])]
+# ds = ds[pd.notnull(obj=ds['avg_speed(km/h)'])]
+# ds = ds[pd.notnull(obj=ds['consumption(kWh/100km)'])]
+# ds.to_csv(path_or_buf=new_path)
 
 
 """load the data"""
@@ -57,8 +56,8 @@ dataset = pd.read_csv(filepath_or_buffer=new_path)
 # print(dataset.head(n=5))
 # print(dataset.describe())
 
-X = dataset.iloc[:, 5:15].values
-y = dataset.iloc[:, 15].values
+X = dataset.iloc[:, 4:14].values
+y = dataset.iloc[:, 14].values
 # consumption_values = dataset.iloc[:, 16].values
 
 
@@ -135,7 +134,7 @@ do_train_test(model=rf_classifier)
 
 """define the deep mlp as the classifier"""
 def build_classifier():
-    classifier = keras.models.Sequential()
+    classifier = Sequential()
     classifier.add(Dense(units=100, kernel_initializer='uniform', activation='relu', input_dim=len(X[0])))
     classifier.add(Dense(units=50, kernel_initializer='uniform', activation='relu'))
     classifier.add(Dense(units=25, kernel_initializer='uniform', activation='relu'))
