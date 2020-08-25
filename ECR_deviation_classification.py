@@ -39,8 +39,8 @@ warnings.filterwarnings(action="ignore")
 pd.set_option('display.width', 200)
 pd.set_option('display.max_columns', 20)
 
-old_path = "./volkswagen_e_golf_clean.csv"
-new_path = "./new_volkswagen_e_golf.csv"
+old_path = "./data/volkswagen_e_golf_clean.csv"
+new_path = "./data/new_volkswagen_e_golf.csv"
 
 
 """remove missing values (comment it after the first run)"""

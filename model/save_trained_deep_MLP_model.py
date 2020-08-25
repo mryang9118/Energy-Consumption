@@ -18,7 +18,7 @@ def build_regressor():
     regressor.compile(optimizer='adam', loss='mean_absolute_error')
     return regressor
 
-new_path = "./volkswagen_e_golf_data.csv"
+new_path = "../data/volkswagen_e_golf_data.csv"
 dataset = pd.read_csv(filepath_or_buffer=new_path)
 filter_condition = np.abs(dataset['quantity(kWh)']/dataset['trip_distance(km)'] * 100 - dataset['consumption(kWh/100km)']) < dataset['consumption(kWh/100km)']/2
 dataset = dataset[filter_condition]

@@ -11,7 +11,7 @@ model = load_model('./volkswagen_e_golf_model.h5')
 # summarize model.
 model.summary()
 # load dataset
-dataset = pd.read_csv(filepath_or_buffer='./volkswagen_e_golf_data.csv')
+dataset = pd.read_csv(filepath_or_buffer = '../data/volkswagen_e_golf_data.csv')
 filter_condition = np.abs(dataset['quantity(kWh)']/dataset['trip_distance(km)'] * 100 - dataset['consumption(kWh/100km)']) < dataset['consumption(kWh/100km)']/2
 dataset = dataset[filter_condition]
 X = dataset.iloc[:, 4:15].values
