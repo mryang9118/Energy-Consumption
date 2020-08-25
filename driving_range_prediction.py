@@ -56,7 +56,7 @@ pd.set_option('display.width', 200)
 pd.set_option('display.max_columns', 20)
 
 old_path = "./data/volkswagen_e_golf.csv"
-new_path = "./data/volkswagen_e_golf_clean.csv"
+new_path = "./data/volkswagen_e_golf_85_power.csv"
 
 """remove missing values (comment it after the first run)"""
 # ds = pd.read_csv(filepath_or_buffer=old_path)
