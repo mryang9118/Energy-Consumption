@@ -51,31 +51,17 @@ def report_results(training_pred, test_pred):
     print("-------------------------------")
 
 
-def switch_german_number(german_number):
-    dot_number = 0
-    split_array = german_number.split(',')
-    if len(split_array) > 1:
-        dot_number = split_array[1]
-    integer_number = split_array[0].replace('.', '')
-    return float('%s.%s' % (integer_number, dot_number))
-
 warnings.filterwarnings(action="ignore")
 pd.set_option('display.width', 200)
 pd.set_option('display.max_columns', 20)
 
-old_path = "./multi_user_data_clean.csv"
-new_path = "./Tesla_power_310.csv"
-
+old_path = "./volkswagen_e_golf.csv"
+new_path = "./volkswagen_e_golf_clean.csv"
 
 """remove missing values (comment it after the first run)"""
 # ds = pd.read_csv(filepath_or_buffer=old_path)
 # ds = ds[pd.notnull(obj=ds['quantity(kWh)'])]
-# ds = ds[pd.notnull(obj=ds['tire_type'])]
-# ds = ds[pd.notnull(obj=ds['driving_style'])]
-# ds = ds[pd.notnull(obj=ds['consumption(kWh/100km)'])]
 # ds = ds[pd.notnull(obj=ds['avg_speed(km/h)'])]
-# ds = ds[pd.notnull(obj=ds['trip_distance(km)'])]
-# ds['trip_distance(km)'] = ds['trip_distance(km)'].apply(switch_german_number)
 # ds.to_csv(path_or_buf=new_path)
 
 
@@ -83,11 +69,18 @@ new_path = "./Tesla_power_310.csv"
 dataset = pd.read_csv(filepath_or_buffer=new_path)
 # print(dataset.head(n=5))
 # print(dataset.describe())
-filter_condition = np.abs(dataset['quantity(kWh)']/dataset['trip_distance(km)'] * 100 - dataset['consumption(kWh/100km)']) < dataset['consumption(kWh/100km)']/2
+filter_condition = np.abs(
+    dataset['quantity(kWh)'] / dataset['trip_distance(km)'] * 100 - dataset['consumption(kWh/100km)']) < dataset[
+                       'consumption(kWh/100km)'] / 2
 dataset = dataset[filter_condition]
 X = dataset.iloc[:, 5:15].values
 y = dataset.iloc[:, 4].values
 
+# output y standard deviation
+y_standard = np.std(y)
+y_mean = np.mean(y)
+print('std deviation of y is: %s' % y_standard)
+print('mean value of y is: %s' % y_mean)
 # if the data has only one feature, reshape it
 # X = np.reshape(X, newshape=(-1, 1))
 # y = np.reshape(y, newshape=(-1, 1))
@@ -131,21 +124,19 @@ print("\n ------ Linear Regression TrainTest ------")
 reg_training_pred, reg_test_pred = do_fit_predict(model=linear_regressor)
 report_results(training_pred=reg_training_pred, test_pred=reg_test_pred)
 
+"""define the shallow multi-layer perceptron model"""
+mlp = MLPRegressor(hidden_layer_sizes=(10,), max_iter=1000, n_iter_no_change=100, activation='relu',
+                   solver='adam', verbose=False, warm_start=False)
 
-# """define the shallow multi-layer perceptron model"""
-# mlp = MLPRegressor(hidden_layer_sizes=(10,), max_iter=1000, n_iter_no_change=100, activation='relu',
-#                    solver='adam', verbose=False, warm_start=False)
-#
-# """do the KFold cross-validation both with MAE values and r2 scores criteria"""
-# print("\n ------ MLP CrossVal ------")
-# mlp_mae_values, mlp_r2_scores = do_kfold(model=mlp)
-# report_cross_val_results(mae_values=mlp_mae_values, r2_scores=mlp_r2_scores)
-#
-# """train the MLP model and print the results on the never-seen-before test data"""
-# print("\n ------ MLP TrainTest ------")
-# mlp_training_pred, mlp_test_pred = do_fit_predict(model=mlp)
-# report_results(training_pred=mlp_training_pred, test_pred=mlp_test_pred)
+"""do the KFold cross-validation both with MAE values and r2 scores criteria"""
+print("\n ------ MLP CrossVal ------")
+mlp_mae_values, mlp_r2_scores = do_kfold(model=mlp)
+report_cross_val_results(mae_values=mlp_mae_values, r2_scores=mlp_r2_scores)
 
+"""train the MLP model and print the results on the never-seen-before test data"""
+print("\n ------ MLP TrainTest ------")
+mlp_training_pred, mlp_test_pred = do_fit_predict(model=mlp)
+report_results(training_pred=mlp_training_pred, test_pred=mlp_test_pred)
 
 """define the random forest ensemble model"""
 rf = RandomForestRegressor(n_estimators=200, criterion="mae", warm_start=False)
@@ -160,22 +151,22 @@ print("\n ------ Random Forest TrainTest ------")
 rf_train_pred, rf_test_pred = do_fit_predict(model=rf)
 report_results(training_pred=rf_train_pred, test_pred=rf_test_pred)
 
+"""define the ada-boost ensemble model"""
+ab = AdaBoostRegressor(n_estimators=50, learning_rate=1.)
 
-# """define the ada-boost ensemble model"""
-# ab = AdaBoostRegressor(n_estimators=50, learning_rate=1.)
-#
-# """do the KFold cross-validation both with MAE values and r2 scores criteria"""
-# print("\n ------ AdaBoost CrossVal ------")
-# ab_mae_values, ab_r2_scores = do_kfold(model=ab)
-# report_cross_val_results(mae_values=ab_mae_values, r2_scores=ab_r2_scores)
-#
-# """train the ada-boost model and print the results on the never-seen-before test data"""
-# print("\n ------ AdaBoost TrainTest ------")
-# ab_train_pred, ab_test_pred = do_fit_predict(model=ab)
-# report_results(training_pred=ab_train_pred, test_pred=ab_test_pred)
+"""do the KFold cross-validation both with MAE values and r2 scores criteria"""
+print("\n ------ AdaBoost CrossVal ------")
+ab_mae_values, ab_r2_scores = do_kfold(model=ab)
+report_cross_val_results(mae_values=ab_mae_values, r2_scores=ab_r2_scores)
 
+"""train the ada-boost model and print the results on the never-seen-before test data"""
+print("\n ------ AdaBoost TrainTest ------")
+ab_train_pred, ab_test_pred = do_fit_predict(model=ab)
+report_results(training_pred=ab_train_pred, test_pred=ab_test_pred)
 
 """define the deep multi-layer perceptron model"""
+
+
 def build_regressor():
     regressor = Sequential()
     regressor.add(Dense(units=100, kernel_initializer='uniform', activation='relu', input_dim=len(X[0])))
@@ -201,7 +192,6 @@ print("\n ------ Deep MLP TrainTest ------")
 deep_mlp_train_pred, deep_mlp_test_pred = do_fit_predict(model=deep_mlp)
 report_results(training_pred=deep_mlp_train_pred, test_pred=deep_mlp_test_pred)
 
-
 """plot driving range based on the battery quantity"""
 quantity = X[:, 2]
 distance = y
@@ -225,21 +215,21 @@ plt.show()
 
 
 """plot driving range based on the average speed"""
-# avg_speed = X[:, 10]
-# avg_speed = np.reshape(avg_speed, newshape=(-1, 1))
-#
-# speed_linear_reg = LinearRegression()
-# speed_linear_reg.fit(X=avg_speed, y=distance)
-# s_slope = speed_linear_reg.coef_[0]
-# s_intercept = speed_linear_reg.intercept_
-# s_predicted_distances = s_intercept + s_slope * quantity
-#
-# fig = plt.figure()
-# plt.scatter(x=avg_speed, y=distance, s=15, c='orange', linewidths=0.1)
-# plt.plot(quantity, s_predicted_distances, c='blue', linewidth=2)
-# plt.legend(('fitted line', 'data records'), loc='upper left')
-# plt.title(label='Linear Regression Plot')
-# plt.xlabel(xlabel='average speed (km/h)'), plt.ylabel(ylabel='driving range (km)')
-# plt.xlim(-5, 110), plt.ylim(-30, 650)
-# plt.show()
+avg_speed = X[:, 10]
+avg_speed = np.reshape(avg_speed, newshape=(-1, 1))
+
+speed_linear_reg = LinearRegression()
+speed_linear_reg.fit(X=avg_speed, y=distance)
+s_slope = speed_linear_reg.coef_[0]
+s_intercept = speed_linear_reg.intercept_
+s_predicted_distances = s_intercept + s_slope * quantity
+
+fig = plt.figure()
+plt.scatter(x=avg_speed, y=distance, s=15, c='orange', linewidths=0.1)
+plt.plot(quantity, s_predicted_distances, c='blue', linewidth=2)
+plt.legend(('fitted line', 'data records'), loc='upper left')
+plt.title(label='Linear Regression Plot')
+plt.xlabel(xlabel='average speed (km/h)'), plt.ylabel(ylabel='driving range (km)')
+plt.xlim(-5, 110), plt.ylim(-30, 650)
+plt.show()
 # fig.savefig('range_to_speed.png')
