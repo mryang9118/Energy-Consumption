@@ -10,7 +10,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-import util
+from sprit_monitor.preprocess_sprit_monitor_ev_data import SpritMonitorPreProcess
 
 
 def do_kfold(model):
@@ -50,16 +50,17 @@ def report_results(training_pred, test_pred):
     print("variance score on test data: %.3f" % r2_score(y_true=y_test, y_pred=test_pred))
     print("-------------------------------")
 
+
 warnings.filterwarnings(action="ignore")
 pd.set_option('display.width', 200)
 pd.set_option('display.max_columns', 20)
 
-old_path = "./data/volkswagen_e_golf_data.csv"
-new_path = "./data/volkswagen_e_golf_data_clean.csv"
-data_frame = util.clean_ev_data(old_path, new_path)
+old_path = "./data/volkswagen_e_golf_85_power.csv"
+new_path = "./data/volkswagen_e_golf_85_power_test.csv"
+data_frame = SpritMonitorPreProcess.clean_ev_data(old_path, new_path)
 X = data_frame[['power(kW)', 'quantity(kWh)', 'tire_type', 'city',
-               'motor_way', 'country_roads', 'driving_style',
-               'consumption(kWh/100km)', 'A/C', 'park_heating', 'avg_speed(km/h)']].values
+                'motor_way', 'country_roads', 'driving_style',
+                'consumption(kWh/100km)', 'A/C', 'park_heating', 'avg_speed(km/h)']].values
 y = data_frame[['trip_distance(km)']].values
 
 # calculate the distinct values

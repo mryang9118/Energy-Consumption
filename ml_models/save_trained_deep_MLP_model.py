@@ -6,6 +6,7 @@ from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
+
 def build_regressor():
     regressor = Sequential()
     regressor.add(Dense(units=100, kernel_initializer='uniform', activation='relu', input_dim=len(X[0])))
@@ -18,13 +19,14 @@ def build_regressor():
     regressor.compile(optimizer='adam', loss='mean_absolute_error')
     return regressor
 
+
 new_path = "../data/volkswagen_e_golf_data.csv"
 dataset = pd.read_csv(filepath_or_buffer=new_path)
-filter_condition = np.abs(dataset['quantity(kWh)']/dataset['trip_distance(km)'] * 100 - dataset['consumption(kWh/100km)']) < dataset['consumption(kWh/100km)']/2
+filter_condition = np.abs(dataset['quantity(kWh)'] / dataset['trip_distance(km)'] * 100
+                          - dataset['consumption(kWh/100km)']) < dataset['consumption(kWh/100km)'] / 2
 dataset = dataset[filter_condition]
 X = dataset.iloc[:, 4:15].values
 y = dataset.iloc[:, 3].values
-
 
 """do the preprocessing tasks on the data"""
 # encode categorical features
