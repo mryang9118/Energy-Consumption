@@ -25,31 +25,24 @@ class SpritMonitorPreProcess:
                                   - data_frame['consumption(kWh/100km)']) < data_frame['consumption(kWh/100km)'] / 2
         return data_frame[filter_condition]
 
-    def preprocess_ev_data(self, old_path, new_path):
-        data_frame = self.clean_ev_data(old_path, new_path)
+    @staticmethod
+    def preprocess_ev_data(data_frame):
         X = data_frame[['power(kW)', 'quantity(kWh)', 'tire_type', 'city',
                         'motor_way', 'country_roads', 'driving_style',
                         'consumption(kWh/100km)', 'A/C', 'park_heating', 'avg_speed(km/h)']].values
         y = data_frame[['trip_distance(km)']].values
-
         # calculate the distinct values
         power_num = data_frame.groupby(['power(kW)']).ngroups
         tire_num = data_frame.groupby(['tire_type']).ngroups
-        # dstyle_num = data_frame.groupby(['driving_style']).ngroups
-
-        """do the preprocessing tasks on the data"""
-        # encode categorical features
         label_encoder_1 = LabelEncoder()
         X[:, 0] = label_encoder_1.fit_transform(y=X[:, 0])
         label_encoder_1 = LabelEncoder()
         X[:, 2] = label_encoder_1.fit_transform(y=X[:, 2])
         label_encoder_2 = LabelEncoder()
         X[:, 6] = label_encoder_2.fit_transform(y=X[:, 6])
-
         # onehot encoding for categorical features with more than 2 categories
         onehot_encoder = OneHotEncoder(categorical_features=[0, 2, 6])
         X = onehot_encoder.fit_transform(X=X).toarray()
-
         # delete the first column code of each encoded feature to avoid the dummy variable
         X = np.delete(X, [0, power_num, power_num + tire_num], 1)
-        return data_frame, X, y
+        return X, y
