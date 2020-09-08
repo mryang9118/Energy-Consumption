@@ -10,7 +10,6 @@ class DeepMLPModel(Model):
     def __init__(self, input_dim):
         super(DeepMLPModel, self).__init__(name="custom_deep_mlp_model")
         self.input_dim = input_dim
-        # add a new layer of input
         self.hidden_layer_1 = Dense(100, kernel_initializer='uniform', activation='relu', input_dim=input_dim)
         self.hidden_layer_2 = Dense(50, kernel_initializer='uniform', activation='relu')
         self.hidden_layer_3 = Dense(25, kernel_initializer='uniform', activation='relu')

@@ -1,19 +1,20 @@
 import warnings
-
-from sprit_monitor.preprocess_sprit_monitor_ev_data import *
+from sprit_monitor.sprit_monitor_preprocess import *
 from ml_models.ev_deep_mlp import DeepMLPModel
-from ml_models.ev_random_forest import EVRandomForestModel
 from sklearn.preprocessing import StandardScaler
 from numpy import sqrt
-from ml_models.evaluate_util import *
+from ml_models.preprocess import *
 from sklearn.metrics import SCORERS
+from sprit_monitor.sprit_monitor_constants import *
+from ml_models.ev_random_forest import *
+from ml_models.evaluate_util import *
 
 warnings.filterwarnings(action="ignore")
 old_path = "../data/volkswagen_e_golf_85_power.csv"
 new_path = "../data/volkswagen_e_golf_85_power_test.csv"
 # preprocess ev data from sprit monitor
-after_clean = SpritMonitorPreProcess.clean_ev_data(old_path, new_path)
-X, y = SpritMonitorPreProcess.preprocess_ev_data(after_clean)
+after_clean = clean_ev_data(old_path, new_path)
+X, y = preprocess_data(after_clean, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCODED_COLUMNS)
 # scale the values
 sc = StandardScaler()
 X = sc.fit_transform(X=X)
@@ -32,7 +33,7 @@ print('RMSE: %.3f, MAE: %.3f' % (sqrt(dmlp_error['mse']), dmlp_error['mae']))
 # save model to disk or just save weights by save_weights
 # model.save(filepath="./volkswagen_model", save_format="tf")
 print('----2. Using Random Forest Model to Evaluate----')
-rf = EVRandomForestModel.get_model()
+rf = get_rf_model()
 rf_error = evaluate_model(rf, X, y, scoring_methods)
 report_results(rf_error, scoring_methods)
 

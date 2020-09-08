@@ -1,7 +1,5 @@
 import warnings
-import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split, ShuffleSplit, cross_validate
@@ -10,7 +8,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-from sprit_monitor.preprocess_sprit_monitor_ev_data import SpritMonitorPreProcess
+from sprit_monitor.sprit_monitor_preprocess import *
 
 
 def do_kfold(model):
@@ -57,7 +55,7 @@ pd.set_option('display.max_columns', 20)
 
 old_path = "./data/volkswagen_e_golf_85_power.csv"
 new_path = "./data/volkswagen_e_golf_85_power_test.csv"
-data_frame = SpritMonitorPreProcess.clean_ev_data(old_path, new_path)
+data_frame = clean_ev_data(old_path, new_path)
 X = data_frame[['power(kW)', 'quantity(kWh)', 'tire_type', 'city',
                 'motor_way', 'country_roads', 'driving_style',
                 'consumption(kWh/100km)', 'A/C', 'park_heating', 'avg_speed(km/h)']].values

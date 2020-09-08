@@ -2,10 +2,11 @@
 import numpy
 import pandas as pd
 from sklearn.model_selection import GridSearchCV, ShuffleSplit
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
+from ml_models.preprocess import *
+from sprit_monitor.sprit_monitor_constants import *
 
 
 # Function to create model, required for KerasClassifier
@@ -28,30 +29,9 @@ numpy.random.seed(seed)
 new_path = "../data/volkswagen_e_golf_data.csv"
 # load dataset
 dataset = pd.read_csv(filepath_or_buffer=new_path)
-# print(dataset.head(n=5))
-# print(dataset.describe())
+# preprocess dataset
+X, y = preprocess_data(dataset, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCODED_COLUMNS)
 
-X = dataset.iloc[:, 5:15].values
-Y = dataset.iloc[:, 4].values
-
-# if the data has only one feature, reshape it
-# X = np.reshape(X, newshape=(-1, 1))
-# y = np.reshape(y, newshape=(-1, 1))
-
-
-"""do the preprocessing tasks on the data"""
-# encode categorical features
-label_encoder_1 = LabelEncoder()
-X[:, 1] = label_encoder_1.fit_transform(y=X[:, 1])
-label_encoder_2 = LabelEncoder()
-X[:, 5] = label_encoder_2.fit_transform(y=X[:, 5])
-
-# onehot encoding for categorical features with more than 2 categories
-onehot_encoder = OneHotEncoder(categorical_features=[5])
-X = onehot_encoder.fit_transform(X=X).toarray()
-
-# delete the first column to avoid the dummy variable
-X = X[:, 1:]
 # create model
 model = KerasRegressor(build_fn=build_regressor, verbose=0)
 # define the grid search parameters
@@ -60,7 +40,7 @@ epochs = [10, 20, 30, 50]
 param_grid = dict(batch_size=batch_size, epochs=epochs)
 cv = ShuffleSplit(n_splits=10, test_size=0.5, random_state=2)
 grid = GridSearchCV(estimator=model, scoring='r2', param_grid=param_grid, n_jobs=1, cv=cv)
-grid_result = grid.fit(X, Y)
+grid_result = grid.fit(X, y)
 # summarize results
 print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
 means = grid_result.cv_results_['mean_test_score']
