@@ -6,7 +6,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 from ml_models.preprocess import *
-from sprit_monitor.sprit_monitor_constants import *
+from utils.constants import *
 
 # Function to create model, required for KerasClassifier
 from tensorflow.keras.layers import Dropout

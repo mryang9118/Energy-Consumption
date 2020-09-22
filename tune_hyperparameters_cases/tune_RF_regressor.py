@@ -1,10 +1,10 @@
 import warnings
-import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split, ShuffleSplit, GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from ml_models.preprocess import *
-from sprit_monitor.sprit_monitor_constants import *
+from utils.constants import *
+from sprit_monitor.sprit_monitor_preprocess import *
 
 warnings.filterwarnings(action="ignore")
 pd.set_option('display.width', 200)
@@ -15,9 +15,7 @@ new_path = "../data/single_power_Renault_ZOE.csv"
 
 """load the data"""
 dataset = pd.read_csv(filepath_or_buffer=new_path)
-filter_condition = np.abs(dataset['quantity(kWh)']/dataset['trip_distance(km)'] * 100
-                          - dataset['consumption(kWh/100km)']) < dataset['consumption(kWh/100km)']/2
-dataset = dataset[filter_condition]
+dataset = dataset[get_sprit_monitor_filter_condition(dataset)]
 X, y = preprocess_data(dataset, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCODED_COLUMNS)
 # split the dataset into training-set and test-set
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)

@@ -53,9 +53,9 @@ warnings.filterwarnings(action="ignore")
 pd.set_option('display.width', 200)
 pd.set_option('display.max_columns', 20)
 
-old_path = "./data/volkswagen_e_golf_85_power.csv"
-new_path = "./data/volkswagen_e_golf_85_power_test.csv"
-data_frame = clean_ev_data(old_path, new_path)
+old_path = "../data/volkswagen_e_golf_85_power.csv"
+# new_path = "../data/volkswagen_e_golf_85_power_test.csv"
+data_frame = clean_ev_data(old_path)
 X = data_frame[['power(kW)', 'quantity(kWh)', 'tire_type', 'city',
                 'motor_way', 'country_roads', 'driving_style',
                 'consumption(kWh/100km)', 'A/C', 'park_heating', 'avg_speed(km/h)']].values
@@ -106,18 +106,18 @@ print("\n ------ Linear Regression TrainTest ------")
 reg_training_pred, reg_test_pred = do_fit_predict(model=linear_regressor)
 report_results(training_pred=reg_training_pred, test_pred=reg_test_pred)
 
-"""define the random forest ensemble model"""
-rf = RandomForestRegressor(n_estimators=200, criterion="mae", oob_score=True, warm_start=False)
-
-"""do the KFold cross-validation both with MAE values and r2 scores criteria"""
-print("\n ------ Random Forest CrossVal ------")
-rf_mae_values, rf_r2_scores = do_kfold(model=rf)
-report_cross_val_results(mae_values=rf_mae_values, r2_scores=rf_r2_scores)
-
-"""train the RF model and print the results on the never-seen-before test data"""
-print("\n ------ Random Forest TrainTest ------")
-rf_train_pred, rf_test_pred = do_fit_predict(model=rf)
-report_results(training_pred=rf_train_pred, test_pred=rf_test_pred)
+# """define the random forest ensemble model"""
+# rf = RandomForestRegressor(n_estimators=200, criterion="mae", oob_score=True, warm_start=False)
+#
+# """do the KFold cross-validation both with MAE values and r2 scores criteria"""
+# print("\n ------ Random Forest CrossVal ------")
+# rf_mae_values, rf_r2_scores = do_kfold(model=rf)
+# report_cross_val_results(mae_values=rf_mae_values, r2_scores=rf_r2_scores)
+#
+# """train the RF model and print the results on the never-seen-before test data"""
+# print("\n ------ Random Forest TrainTest ------")
+# rf_train_pred, rf_test_pred = do_fit_predict(model=rf)
+# report_results(training_pred=rf_train_pred, test_pred=rf_test_pred)
 
 """define the deep multi-layer perceptron model"""
 
