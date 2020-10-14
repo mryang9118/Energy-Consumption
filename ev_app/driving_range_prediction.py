@@ -54,7 +54,6 @@ pd.set_option('display.width', 200)
 pd.set_option('display.max_columns', 20)
 
 old_path = "../data/volkswagen_e_golf_85_power.csv"
-# new_path = "../data/volkswagen_e_golf_85_power_test.csv"
 data_frame = clean_ev_data(old_path)
 X = data_frame[['power(kW)', 'quantity(kWh)', 'tire_type', 'city',
                 'motor_way', 'country_roads', 'driving_style',

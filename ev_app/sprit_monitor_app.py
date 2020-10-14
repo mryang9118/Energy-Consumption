@@ -20,9 +20,11 @@ X, y = preprocess_data(after_clean, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCOD
 # scale the values
 sc = StandardScaler()
 X = sc.fit_transform(X=X)
-getter = ModelsGetter(RF, X, y)
+getter = ModelsGetter(DEEP_MLP, X, y)
 # train the model, and evaluate
 getter.process()
+
+
 model = getter.get_model()
 # use the test data for predict, just for example
 y_pred = model.predict(X[0:2000, ])

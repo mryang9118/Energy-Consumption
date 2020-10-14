@@ -12,7 +12,7 @@ def evaluate_general_model(estimator, x, y, scoring, n_splits=10, test_size=0.5,
             fun_values = scoring_array[fun_key]
             print('average %s value is: %s' % (fun, abs(round(number=fun_values.mean(), ndigits=3))))
             best_value = sorted(fun_values, reverse=False)[-1]
-            print("best %s value is:", abs(round(number=best_value, ndigits=3)))
+            print("best %s value is: %s" % (fun, abs(round(number=best_value, ndigits=3))))
             print("-------------------------------")
 
 
@@ -25,4 +25,4 @@ def evaluate_deep_mlp(model, x_matrix, y_matrix, metrics):
 def evaluate_predict_result(y_true, y_pred):
     print("RMSE value: %.3f" % sqrt(mean_squared_error(y_true=y_true, y_pred=y_pred)))
     print("MAE value: %.3f" % mean_absolute_error(y_true=y_true, y_pred=y_pred))
-    print("Variance score: %.3f" % r2_score(y_true=y_true, y_pred=y_pred))
+    print("Variance score: %.3f" % (r2_score(y_true=y_true, y_pred=y_pred)))

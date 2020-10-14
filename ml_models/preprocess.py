@@ -32,13 +32,14 @@ def preprocess_data(data_frame, x_columns_name, y_column_name, require_encoded_c
             onehot_index_list.append(column_index)
             feature_count_list.append(distinct_count)
     # onehot encoding for categorical features with more than 2 categories
-    onehot_encoder = OneHotEncoder(categorical_features=onehot_index_list)
-    X = onehot_encoder.fit_transform(X=X).toarray()
-    # delete the first column code of each encoded feature to avoid the dummy variable
-    delete_column_list = []
-    start = 0
-    for i in range(0, len(feature_count_list)):
-        delete_column_list.append(start)
-        start += feature_count_list[i]
-    X = np.delete(X, delete_column_list, 1)
+    if onehot_index_list:
+        onehot_encoder = OneHotEncoder(categorical_features=onehot_index_list)
+        X = onehot_encoder.fit_transform(X=X).toarray()
+        # delete the first column code of each encoded feature to avoid the dummy variable
+        delete_column_list = []
+        start = 0
+        for i in range(0, len(feature_count_list)):
+            delete_column_list.append(start)
+            start += feature_count_list[i]
+        X = np.delete(X, delete_column_list, 1)
     return X, y
