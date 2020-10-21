@@ -25,7 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, shuffl
 # scale the values
 sc = StandardScaler()
 X_train = sc.fit_transform(X=X_train)
-X_test = sc.fit_transform(X=X_test)
+X_test = sc.transform(X=X_test)
 # RF Model
 print('-------RF Start-------')
 getter = ModelsGetter(RF, X_train, y_train)

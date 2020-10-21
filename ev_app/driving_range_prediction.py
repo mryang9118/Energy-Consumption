@@ -87,7 +87,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle
 # scale the values
 sc = StandardScaler()
 X_train = sc.fit_transform(X=X_train)
-X_test = sc.fit_transform(X=X_test)
+X_test = sc.transform(X=X_test)
 # y_train = sc.fit_transform(X=y_train)
 # y_test = sc.fit_transform(X=y_test)
 

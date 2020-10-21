@@ -88,7 +88,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 # scale the features
 sc = StandardScaler()
 X_train = sc.fit_transform(X=X_train)
-X_test = sc.fit_transform(X=X_test)
+X_test = sc.transform(X=X_test)
 
 
 """find the best parameters for the SVM classifier using GridSearch (comment it after the first run)"""
