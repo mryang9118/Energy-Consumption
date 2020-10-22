@@ -2,7 +2,8 @@ from sklearn.model_selection import ShuffleSplit, cross_validate
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from numpy import sqrt
 
-def evaluate_general_model(estimator, x, y, scoring, n_splits=10, test_size=0.5, verbose=2):
+
+def evaluate_general_model(estimator, x, y, scoring, n_splits=10, test_size=0.5, verbose=0):
     cv = ShuffleSplit(n_splits=n_splits, test_size=test_size, random_state=2)
     scoring_array = cross_validate(estimator=estimator, X=x, y=y, cv=cv,
                                    scoring=scoring, verbose=verbose)

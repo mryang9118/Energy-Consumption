@@ -20,27 +20,31 @@ TARGET_COLUMN_NAMES = ['odometer']
 # preprocess ev data from sprit monitor
 raw_data = pd.read_csv(filepath_or_buffer=file_path, delimiter=' ')
 X, y = preprocess_data(raw_data, SOURCE_COLUMN_NAMES, TARGET_COLUMN_NAMES, [])
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, shuffle=True)
+for i in range(100):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, shuffle=True)
+    # scale the values
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X=X_train)
+    X_test = sc.transform(X=X_test)
+    # RF Model
+    # print('-------RF Start-------')
 
-# scale the values
-sc = StandardScaler()
-X_train = sc.fit_transform(X=X_train)
-X_test = sc.transform(X=X_test)
-# RF Model
-print('-------RF Start-------')
-getter = ModelsGetter(RF, X_train, y_train)
-getter.process()
-model = getter.get_model()
-y_pred = model.predict(X_test)
-print('y test: %s' % str(y_test))
-print('y prediction: %s' % str(y_pred))
-evaluate_predict_result(y_test, y_pred)
-print('-------RF End-------')
+    print('---------------------------%s time Start---------------------------'% i)
+    getter = ModelsGetter(RF, X_train, y_train)
+    getter.process()
+    model = getter.get_model()
+    y_pred = model.predict(X_test)
+    print('y test: %s' % str(y_test).replace('\n', ' '))
+    print('y prediction: %s' % str(y_pred))
+    evaluate_predict_result(y_test, y_pred)
+    # print('-------RF End-------')
+    print('---------------------------%s time End---------------------------'% i)
+
 # Deep MLP Model
-print('-------Deep MLP Start-------')
-getter = ModelsGetter(DEEP_MLP, X_train, y_train)
-getter.process()
-model = getter.get_model()
-y_pred = model.predict(X_test)
-evaluate_predict_result(y_test, y_pred)
-print('-------Deep MLP End-------')
+# print('-------Deep MLP Start-------')
+# getter = ModelsGetter(DEEP_MLP, X_train, y_train)
+# getter.process()
+# model = getter.get_model()
+# y_pred = model.predict(X_test)
+# evaluate_predict_result(y_test, y_pred)
+# print('-------Deep MLP End-------')

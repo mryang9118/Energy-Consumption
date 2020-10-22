@@ -23,8 +23,6 @@ def preprocess_data(data_frame, x_columns_name, y_column_name, require_encoded_c
     feature_count_list = []
     for single_column in require_encoded_columns:
         distinct_count = x_data_frame.groupby([single_column]).ngroups
-        if distinct_count < 2:
-            continue
         column_index = x_data_frame.columns.get_loc(single_column)
         label_encoder = LabelEncoder()
         X[:, column_index] = label_encoder.fit_transform(y=X[:, column_index])
