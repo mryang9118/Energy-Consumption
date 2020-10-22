@@ -21,7 +21,7 @@ TARGET_COLUMN_NAMES = ['odometer']
 raw_data = pd.read_csv(filepath_or_buffer=file_path, delimiter=' ')
 X, y = preprocess_data(raw_data, SOURCE_COLUMN_NAMES, TARGET_COLUMN_NAMES, [])
 for i in range(100):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, shuffle=True)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, shuffle=True)
     # scale the values
     sc = StandardScaler()
     X_train = sc.fit_transform(X=X_train)
