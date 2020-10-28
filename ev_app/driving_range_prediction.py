@@ -88,8 +88,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle
 sc = StandardScaler()
 X_train = sc.fit_transform(X=X_train)
 X_test = sc.transform(X=X_test)
-# y_train = sc.fit_transform(X=y_train)
-# y_test = sc.fit_transform(X=y_test)
 
 
 """define the linear regression model"""
@@ -105,18 +103,18 @@ print("\n ------ Linear Regression TrainTest ------")
 reg_training_pred, reg_test_pred = do_fit_predict(model=linear_regressor)
 report_results(training_pred=reg_training_pred, test_pred=reg_test_pred)
 
-# """define the random forest ensemble model"""
-# rf = RandomForestRegressor(n_estimators=200, criterion="mae", oob_score=True, warm_start=False)
-#
-# """do the KFold cross-validation both with MAE values and r2 scores criteria"""
-# print("\n ------ Random Forest CrossVal ------")
-# rf_mae_values, rf_r2_scores = do_kfold(model=rf)
-# report_cross_val_results(mae_values=rf_mae_values, r2_scores=rf_r2_scores)
-#
-# """train the RF model and print the results on the never-seen-before test data"""
-# print("\n ------ Random Forest TrainTest ------")
-# rf_train_pred, rf_test_pred = do_fit_predict(model=rf)
-# report_results(training_pred=rf_train_pred, test_pred=rf_test_pred)
+"""define the random forest ensemble model"""
+rf = RandomForestRegressor(n_estimators=200, criterion="mae", oob_score=True, warm_start=False)
+
+"""do the KFold cross-validation both with MAE values and r2 scores criteria"""
+print("\n ------ Random Forest CrossVal ------")
+rf_mae_values, rf_r2_scores = do_kfold(model=rf)
+report_cross_val_results(mae_values=rf_mae_values, r2_scores=rf_r2_scores)
+
+"""train the RF model and print the results on the never-seen-before test data"""
+print("\n ------ Random Forest TrainTest ------")
+rf_train_pred, rf_test_pred = do_fit_predict(model=rf)
+report_results(training_pred=rf_train_pred, test_pred=rf_test_pred)
 
 """define the deep multi-layer perceptron model"""
 

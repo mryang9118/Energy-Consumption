@@ -10,11 +10,12 @@ from utils.constants import *
 from ml_models.deep_mlp_models import DeepMLPModel
 from ml_models.machine_learning_models import *
 from ml_models.evaluate_util import *
+import joblib
 
 MODEL_CONFIG_PATH = "../config/models_config.xml"
 
 
-class ModelsGetter(object):
+class ModelsFitter(object):
     def __init__(self, model, x_matrix, y_matrix):
         self.model = model
         self.x_matrix = x_matrix
@@ -29,7 +30,7 @@ class ModelsGetter(object):
             self.model_used.compile(optimizer=params_dict.get('optimizer'), loss=params_dict.get('loss'),
                                     metrics=params_dict.get('metrics'))
             self.model_used.fit(self.x_matrix, self.y_matrix, batch_size=params_dict.get('batch_size'),
-                                epochs=params_dict.get('epochs'), verbose=2)
+                                epochs=params_dict.get('epochs'), verbose=0)
             evaluate_deep_mlp(self.model_used, self.x_matrix, self.y_matrix, params_dict.get('metrics'))
         elif self.model == RF:
             self.model_used = random_forest_regress_model(params_dict.get('n_estimators'), params_dict.get('criterion'))
@@ -40,3 +41,12 @@ class ModelsGetter(object):
 
     def get_model(self):
         return self.model_used
+
+    def save_model(self):
+        if self.model == DEEP_MLP:
+            # sub model should assign parameter save_format
+            self.model_used.save('%s/%s_model' % (MODEL_SAVED_PATH, str(self.model).lower()), save_format="tf")
+        else:
+            # apply to any model from scikit-learn
+            joblib.dump(self.model_used, '%s/%s_model.joblib' % (MODEL_SAVED_PATH, str(self.model).lower()), compress=3)
+        print("---Save %s model to %s_model.* file.---" % (self.model, str(self.model).lower()))

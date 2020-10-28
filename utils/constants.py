@@ -15,3 +15,5 @@ DEEP_MLP = 'DeepMLP'
 RF = 'RandomForest'
 MLP = 'MLP'
 ADA_BOOST = 'AdaBoost'
+
+MODEL_SAVED_PATH = '../ml_models'
