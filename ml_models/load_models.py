@@ -20,3 +20,6 @@ class TunedModelLoader(object):
 
     def load_model(self):
         return self.model_used
+
+    def get_model_name(self):
+        return self.model_name

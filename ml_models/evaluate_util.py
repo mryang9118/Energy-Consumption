@@ -1,6 +1,6 @@
-from sklearn.model_selection import ShuffleSplit, cross_validate
+from sklearn.model_selection import ShuffleSplit, cross_validate, learning_curve
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-from numpy import sqrt
+import numpy as np
 
 
 def evaluate_general_model(estimator, x, y, scoring, n_splits=10, test_size=0.5, verbose=0):
@@ -24,6 +24,8 @@ def evaluate_deep_mlp(model, x_matrix, y_matrix, metrics):
 
 
 def evaluate_predict_result(y_true, y_pred):
-    print("RMSE value: %.3f" % sqrt(mean_squared_error(y_true=y_true, y_pred=y_pred)))
+    print("RMSE value: %.3f" % np.sqrt(mean_squared_error(y_true=y_true, y_pred=y_pred)))
     print("MAE value: %.3f" % mean_absolute_error(y_true=y_true, y_pred=y_pred))
     print("Variance score: %.3f" % (r2_score(y_true=y_true, y_pred=y_pred)))
+
+
