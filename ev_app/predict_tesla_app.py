@@ -22,7 +22,7 @@ test_data = clean_ev_data(test_path)
 X, y = preprocess_data(train_data, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCODED_COLUMNS)
 X_test, y_test = preprocess_data(test_data, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCODED_COLUMNS)
 
-for i in range(10):
+for i in range(1):
     # scale the values
     # train the model, and evaluate
     X_train, X_abandon_test, y_train, y_abandon_test = train_test_split(X, y, test_size=0.1, shuffle=True)
@@ -39,4 +39,5 @@ for i in range(10):
     print('y test: %s' % str(y_test).replace('\n', ' '))
     print('y prediction: %s' % str(y_pred))
     evaluate_predict_result(y_test, y_pred)
+    getter.calculate_feature_importance()
     print('---------------------------%s time End---------------------------' % i)

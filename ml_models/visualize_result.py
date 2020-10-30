@@ -1,6 +1,6 @@
 """
 @Project: Energy-Consumption   
-@Description: TODO         
+@Description: visualize the evaluation result
 @Time:2020/10/29 16:37                      
  
 """
@@ -30,7 +30,15 @@ def plot_curve(model_name, sizes, training_scores, testing_scores):
     plt.plot(sizes, test_scores_mean, linewidth=2, marker='s', markersize=5, color="g", label="Cross-validation score")
 
     # Drawing plot
-    plt.title("LEARNING CURVE FOR %s" % model_name)
+    plt.title("Learning Curve For %s" % model_name)
     plt.xlabel("Training Set Size"), plt.ylabel("Accuracy Score"), plt.legend(loc='lower right')
     plt.tight_layout()
+    plt.show()
+
+
+def plot_feature_importance(importance):
+    # todo add feature names, optimize the chart
+    for i, v in enumerate(importance):
+        print('Feature: %0d, Score: %.5f' % (i, v))
+    plt.bar([x for x in range(len(importance))], importance)
     plt.show()

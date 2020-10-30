@@ -14,7 +14,7 @@ from sklearn.model_selection import train_test_split
 from ml_models.models_getter import *
 
 warnings.filterwarnings(action="ignore")
-file_path = "../../data/tesla_trace.csv"
+file_path = "../data/tesla_trace.csv"
 SOURCE_COLUMN_NAMES = ['battery_range', 'speed', 'temperature', 'temperature_setting', 'battery_level']
 TARGET_COLUMN_NAMES = ['odometer']
 # preprocess ev data from sprit monitor

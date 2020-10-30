@@ -12,7 +12,7 @@ from ml_models.parse_models import ModelsFitter
 import warnings
 
 warnings.filterwarnings(action="ignore")
-data_path = "../../data/volkswagen_e_golf_85_power.csv"
+data_path = "../data/volkswagen_e_golf_85_power.csv"
 after_clean = clean_ev_data(data_path)
 X, y = preprocess_data(after_clean, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCODED_COLUMNS)
 sc = StandardScaler()

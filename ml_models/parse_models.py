@@ -57,9 +57,15 @@ class ModelsFitter(object):
 
     def plot_learning_curve(self, cv=10):
         if self.model_name == DEEP_MLP:
-            print('Not support Deep MLP model now.')
+            print('Not support Deep MLP model yet.')
             return
         sizes, training_scores, testing_scores = learning_curve(self.model, self.x_matrix, self.y_matrix, cv=cv,
                                                                 train_sizes=np.linspace(0.1, 1.0, 10), n_jobs=1)
         plot_curve(self.model_name, sizes, training_scores, testing_scores)
 
+    def calculate_feature_importance(self):
+        if self.model_name == RF:
+            importance = self.model.feature_importances_
+            plot_feature_importance(importance)
+        else:
+            print('Not support this model yet.')
