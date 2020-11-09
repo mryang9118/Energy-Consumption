@@ -28,7 +28,7 @@ def get_model(model_name, tuned=True, save_model=True, x_matrix=None, y_matrix=N
         model = model_loader.load_model()
     else:
         getter = ModelsFitter(model_name, x_matrix, y_matrix)
-        getter.process()
+        getter.fit_model()
         model = getter.get_model()
         if save_model:
             getter.save_model()

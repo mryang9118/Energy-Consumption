@@ -36,9 +36,12 @@ def plot_curve(model_name, sizes, training_scores, testing_scores):
     plt.show()
 
 
-def plot_feature_importance(importance):
-    # todo add feature names, optimize the chart
-    for i, v in enumerate(importance):
-        print('Feature: %0d, Score: %.5f' % (i, v))
-    plt.bar([x for x in range(len(importance))], importance)
+def plot_feature_importance(feature_importance, feature_names):
+    for i, v in enumerate(feature_importance):
+        print('Feature: %s, Score: %.5f' % (feature_names[i], v))
+    plt.title('Feature Importance')
+    plt.grid()
+    plt.bar([x for x in range(len(feature_importance))], feature_importance)
+    plt.xticks(range(len(feature_names)), feature_names, rotation=90)
+    plt.tight_layout()
     plt.show()

@@ -22,29 +22,40 @@ class ModelsFitter(object):
         self.x_matrix = x_matrix
         self.y_matrix = y_matrix
         self.model = None
+        self.params_dict = None
 
-    def process(self):
+    def fit_model(self):
         print('------------- Start %s' % time.strftime('%X %x %Z') + ' -------------')
         layers_list, params_dict = read_xml_config(MODEL_CONFIG_PATH, self.model_name)
+        self.params_dict = params_dict
         if self.model_name == DEEP_MLP:
             self.model = DeepMLPModel(layers_list, len(self.x_matrix[0]))
             self.model.compile(optimizer=params_dict.get('optimizer'), loss=params_dict.get('loss'),
                                metrics=params_dict.get('metrics'))
             self.model.fit(self.x_matrix, self.y_matrix, batch_size=params_dict.get('batch_size'),
                            epochs=params_dict.get('epochs'), verbose=0)
-            evaluate_deep_mlp(self.model, self.x_matrix, self.y_matrix, params_dict.get('metrics'))
         elif self.model_name == RF:
             self.model = random_forest_regress_model(params_dict.get('n_estimators'), params_dict.get('criterion'))
             self.model.fit(self.x_matrix, self.y_matrix)
-            evaluate_general_model(self.model, x=self.x_matrix, y=self.y_matrix,
-                                   scoring=params_dict.get('scoring_methods'))
         print('------------- End %s' % time.strftime('%X %x %Z') + ' -------------')
+
+    def evaluate_model(self):
+        scores_dict = {}
+        if self.model_name == DEEP_MLP:
+            scores_dict = evaluate_deep_mlp(self.model, self.x_matrix, self.y_matrix, self.params_dict.get('metrics'))
+        elif self.model_name == RF:
+            scores_dict = evaluate_general_model(self.model, x=self.x_matrix, y=self.y_matrix,
+                                                 scoring=self.params_dict.get('scoring_methods'))
+        return scores_dict
 
     def get_model_name(self):
         return self.model_name
 
     def get_model(self):
         return self.model
+
+    def get_parameters(self):
+        return self.params_dict
 
     def save_model(self):
         if self.model_name == DEEP_MLP:
@@ -63,9 +74,9 @@ class ModelsFitter(object):
                                                                 train_sizes=np.linspace(0.1, 1.0, 10), n_jobs=1)
         plot_curve(self.model_name, sizes, training_scores, testing_scores)
 
-    def calculate_feature_importance(self):
+    def calculate_feature_importance(self, feature_names):
         if self.model_name == RF:
             importance = self.model.feature_importances_
-            plot_feature_importance(importance)
+            plot_feature_importance(importance, feature_names)
         else:
-            print('Not support this model yet.')
+            print('Not support %s model yet.' % self.model_name)

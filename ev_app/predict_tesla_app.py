@@ -25,19 +25,18 @@ X_test, y_test = preprocess_data(test_data, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUI
 for i in range(1):
     # scale the values
     # train the model, and evaluate
-    X_train, X_abandon_test, y_train, y_abandon_test = train_test_split(X, y, test_size=0.1, shuffle=True)
-    X_init_test = X_test
+    X_train, X_abandon_test, y_train, y_abandon_test = train_test_split(X[1], y, test_size=0.1, shuffle=True)
+    X_init_test = X_test[1]
     sc = StandardScaler()
     X_train = sc.fit_transform(X=X_train)
     X_init_test = sc.transform(X=X_init_test)
     print('---------------------------%s time Start---------------------------' % i)
     getter = ModelsFitter(RF, X_train, y_train)
-    getter.process()
+    getter.fit_model()
     model = getter.get_model()
     # use the test data for predict, just for example
     y_pred = model.predict(X_init_test)
     print('y test: %s' % str(y_test).replace('\n', ' '))
     print('y prediction: %s' % str(y_pred))
     evaluate_predict_result(y_test, y_pred)
-    getter.calculate_feature_importance()
     print('---------------------------%s time End---------------------------' % i)

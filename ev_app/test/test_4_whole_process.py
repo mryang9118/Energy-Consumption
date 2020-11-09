@@ -23,8 +23,8 @@ X, y = preprocess_data(raw_data, SOURCE_COLUMN_NAMES, TARGET_COLUMN_NAMES, [])
 rf_model = get_model(RF, True)
 # deep_mlp_model = get_model(DEEP_MLP, True)
 
-for i in range(10):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, shuffle=True)
+for i in range(1):
+    X_train, X_test, y_train, y_test = train_test_split(X[1], y, test_size=0.4, shuffle=True)
     # scale the values
     sc = StandardScaler()
     X_train = sc.fit_transform(X=X_train)

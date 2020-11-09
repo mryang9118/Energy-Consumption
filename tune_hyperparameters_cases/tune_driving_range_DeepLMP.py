@@ -40,7 +40,7 @@ epochs = [10, 20, 30, 50]
 param_grid = dict(batch_size=batch_size, epochs=epochs)
 cv = ShuffleSplit(n_splits=10, test_size=0.5, random_state=2)
 grid = GridSearchCV(estimator=model, scoring='r2', param_grid=param_grid, n_jobs=1, cv=cv)
-grid_result = grid.fit(X, y)
+grid_result = grid.fit(X[1], y)
 # summarize results
 print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
 means = grid_result.cv_results_['mean_test_score']

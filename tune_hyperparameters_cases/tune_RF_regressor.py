@@ -18,7 +18,7 @@ dataset = pd.read_csv(filepath_or_buffer=new_path)
 dataset = dataset[get_sprit_monitor_filter_condition(dataset)]
 X, y = preprocess_data(dataset, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCODED_COLUMNS)
 # split the dataset into training-set and test-set
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
+X_train, X_test, y_train, y_test = train_test_split(X[1], y, test_size=0.2, shuffle=True)
 
 # scale the values
 sc = StandardScaler()
