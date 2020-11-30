@@ -5,17 +5,8 @@ import numpy as np
 def clean_ev_data(file_path):
     """remove missing values (comment it after the first run)"""
     ds = pd.read_csv(filepath_or_buffer=file_path)
-    ds = ds[pd.notnull(obj=ds['power(kW)'])]
-    ds = ds[pd.notnull(obj=ds['quantity(kWh)'])]
-    ds = ds[pd.notnull(obj=ds['tire_type'])]
-    ds = ds[pd.notnull(obj=ds['driving_style'])]
-    ds = ds[pd.notnull(obj=ds['consumption(kWh/100km)'])]
-    ds = ds[pd.notnull(obj=ds['avg_speed(km/h)'])]
-    ds = ds[pd.notnull(obj=ds['trip_distance(km)'])]
-    # ds.to_csv(path_or_buf=new_path, index=False)
-
-    """load the data"""
-    # data_frame = pd.read_csv(filepath_or_buffer=new_path)
+    drop_set_ = ['power(kW)', 'quantity(kWh)', 'tire_type', 'driving_style', 'consumption(kWh/100km)', 'avg_speed(km/h)', 'trip_distance(km)']
+    ds = ds.dropna(axis=0, subset=drop_set_)
     # clean some abnormal data
     return ds[get_sprit_monitor_filter_condition(ds)]
 
