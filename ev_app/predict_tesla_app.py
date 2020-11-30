@@ -4,7 +4,9 @@
 @Time:2020/9/21 16:29
 
 """
-import warnings
+
+from sklearn.pipeline import make_pipeline
+
 from sprit_monitor.sprit_monitor_preprocess import *
 from sklearn.preprocessing import StandardScaler
 from ml_models.preprocess import *
@@ -27,16 +29,12 @@ for i in range(1):
     # train the model, and evaluate
     X_train, X_abandon_test, y_train, y_abandon_test = train_test_split(X[1], y, test_size=0.1, shuffle=True)
     X_init_test = X_test[1]
-    sc = StandardScaler()
-    X_train = sc.fit_transform(X=X_train)
-    X_init_test = sc.transform(X=X_init_test)
-    print('---------------------------%s time Start---------------------------' % i)
-    getter = ModelsFitter(RF, X_train, y_train)
-    getter.fit_model()
-    model = getter.get_model()
-    # use the test data for predict, just for example
-    y_pred = model.predict(X_init_test)
+
+    pipe_line = make_pipeline(StandardScaler(), ModelsFitter(RF))
+    pipe_line.fit(X_train, y_train)
+    y_pred = pipe_line.predict(X_init_test)
     print('y test: %s' % str(y_test).replace('\n', ' '))
     print('y prediction: %s' % str(y_pred))
     evaluate_predict_result(y_test, y_pred)
+
     print('---------------------------%s time End---------------------------' % i)

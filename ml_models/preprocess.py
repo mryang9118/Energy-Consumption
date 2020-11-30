@@ -20,8 +20,7 @@ def preprocess_data(data_frame, x_columns_name, y_column_name, require_encoded_c
     """
     x_data_frame = data_frame[x_columns_name]
     y = data_frame[y_column_name].values
-    column_transformer = ColumnTransformer([('encoder', OneHotEncoder(drop='first'), require_encoded_columns)],
-                                           remainder='passthrough')
+    column_transformer = ColumnTransformer([('encoder', OneHotEncoder(drop='first'), require_encoded_columns)], remainder='passthrough')
     X = column_transformer.fit_transform(X=x_data_frame)
     feature_names = get_feature_names(column_transformer)
     return [feature_names, X], y

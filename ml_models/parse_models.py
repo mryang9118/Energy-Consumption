@@ -17,12 +17,17 @@ MODEL_CONFIG_PATH = "../config/models_config.xml"
 
 
 class ModelsFitter(object):
-    def __init__(self, model_name, x_matrix, y_matrix):
+    def __init__(self, model_name, x_matrix=None, y_matrix=None):
         self.model_name = model_name
         self.x_matrix = x_matrix
         self.y_matrix = y_matrix
         self.model = None
         self.params_dict = None
+
+    def fit(self, X, y):
+        self.x_matrix = X
+        self.y_matrix = y
+        self.fit_model()
 
     def fit_model(self):
         print('------------- Start %s' % time.strftime('%X %x %Z') + ' -------------')
@@ -38,6 +43,13 @@ class ModelsFitter(object):
             self.model = random_forest_regress_model(params_dict.get('n_estimators'), params_dict.get('criterion'))
             self.model.fit(self.x_matrix, self.y_matrix)
         print('------------- End %s' % time.strftime('%X %x %Z') + ' -------------')
+        return self.model
+
+    def predict(self, X):
+        if X is not None:
+            return self.model.predict(X)
+        else:
+            raise Exception('Can not execute "predict()", please Call the fit() method first.')
 
     def evaluate_model(self):
         scores_dict = {}
