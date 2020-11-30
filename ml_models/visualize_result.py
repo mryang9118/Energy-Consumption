@@ -40,6 +40,8 @@ def plot_feature_importance(feature_importance, feature_names):
     for i, v in enumerate(feature_importance):
         print('Feature: %s, Score: %.5f' % (feature_names[i], v))
     plt.title('Feature Importance')
+    plt.xlabel('Feature Name')
+    plt.ylabel('Proportion')
     plt.grid()
     plt.bar([x for x in range(len(feature_importance))], feature_importance)
     plt.xticks(range(len(feature_names)), feature_names, rotation=90)
