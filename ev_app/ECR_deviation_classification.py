@@ -23,6 +23,7 @@ def do_kfold(model):
     print("-------------------------------")
 
 
+#
 def do_train_test(model):
     model.fit(X_train, y_train)
     training_pred = model.predict(X_train)
