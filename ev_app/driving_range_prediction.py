@@ -1,16 +1,15 @@
 import warnings
-import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
+from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split, ShuffleSplit, cross_validate
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-from sprit_monitor.preprocess_sprit_monitor_ev_data import SpritMonitorPreProcess
+from sprit_monitor.sprit_monitor_preprocess import *
 
 
 def do_kfold(model):
@@ -55,9 +54,8 @@ warnings.filterwarnings(action="ignore")
 pd.set_option('display.width', 200)
 pd.set_option('display.max_columns', 20)
 
-old_path = "./data/volkswagen_e_golf_85_power.csv"
-new_path = "./data/volkswagen_e_golf_85_power_test.csv"
-data_frame = SpritMonitorPreProcess.clean_ev_data(old_path, new_path)
+old_path = "../data/volkswagen_e_golf_85_power.csv"
+data_frame = clean_ev_data(old_path)
 X = data_frame[['power(kW)', 'quantity(kWh)', 'tire_type', 'city',
                 'motor_way', 'country_roads', 'driving_style',
                 'consumption(kWh/100km)', 'A/C', 'park_heating', 'avg_speed(km/h)']].values
@@ -69,20 +67,12 @@ tire_num = data_frame.groupby(['tire_type']).ngroups
 dstyle_num = data_frame.groupby(['driving_style']).ngroups
 
 """do the preprocessing tasks on the data"""
-# encode categorical features
-label_encoder_1 = LabelEncoder()
-X[:, 0] = label_encoder_1.fit_transform(y=X[:, 0])
-label_encoder_1 = LabelEncoder()
-X[:, 2] = label_encoder_1.fit_transform(y=X[:, 2])
-label_encoder_2 = LabelEncoder()
-X[:, 6] = label_encoder_2.fit_transform(y=X[:, 6])
-
 # onehot encoding for categorical features with more than 2 categories
-onehot_encoder = OneHotEncoder(categorical_features=[0, 2, 6])
-X = onehot_encoder.fit_transform(X=X).toarray()
+column_transformer = ColumnTransformer([('encoder', OneHotEncoder(drop='first'), [0, 2, 6])], remainder='passthrough')
+X = column_transformer.fit_transform(X=X)
 
 # delete the first column code of each encoded feature to avoid the dummy variable
-X = np.delete(X, [0, power_num, power_num + tire_num], 1)
+# X = np.delete(X, [0, power_num, power_num + tire_num], 1)
 
 # split the dataset into training-set and test-set
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
@@ -90,9 +80,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle
 # scale the values
 sc = StandardScaler()
 X_train = sc.fit_transform(X=X_train)
-X_test = sc.fit_transform(X=X_test)
-# y_train = sc.fit_transform(X=y_train)
-# y_test = sc.fit_transform(X=y_test)
+X_test = sc.transform(X=X_test)
 
 
 """define the linear regression model"""

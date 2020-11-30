@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<models>
+    <DeepMLP>
+        <Denses>
+            <Dense units="100" kernel_initializer="uniform" activation="relu" input_dim=""/>
+            <Dense units="50" kernel_initializer="uniform" activation="relu"/>
+            <Dense units="25" kernel_initializer="uniform" activation="relu"/>
+            <Dense units="13" kernel_initializer="uniform" activation="relu"/>
+            <Dense units="7" kernel_initializer="uniform" activation="relu"/>
+            <Dense units="1" kernel_initializer="uniform" activation="linear"/>
+        </Denses>
+        <hyperparameters optimizer="adam" loss="mean_absolute_error" batch_size="8" epochs="50" metrics="mse,mae"/>
+    </DeepMLP>
+    <RandomForest>
+        <hyperparameters n_estimators="200" criterion="mae" n_splits="10" test_size="0.5" scoring_methods="neg_mean_absolute_error,neg_mean_squared_error,r2"/>
+    </RandomForest>
+    <MLP></MLP>
+    <AdaBoost></AdaBoost>
+</models>
