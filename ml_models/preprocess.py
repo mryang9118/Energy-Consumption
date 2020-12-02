@@ -5,7 +5,7 @@ from sklearn.preprocessing import OneHotEncoder
 import warnings
 
 
-def preprocess_data(data_frame, x_columns_name, y_column_name, require_encoded_columns):
+def preprocess_data(data_frame, x_columns_name, y_column_name, encoded_columns_name):
     """
     :param data_frame:
     :type 'pandas.core.frame.DataFrame':
@@ -20,10 +20,15 @@ def preprocess_data(data_frame, x_columns_name, y_column_name, require_encoded_c
     """
     x_data_frame = data_frame[x_columns_name]
     y = data_frame[y_column_name].values
-    column_transformer = ColumnTransformer([('encoder', OneHotEncoder(drop='first'), require_encoded_columns)], remainder='passthrough')
+    column_transformer = get_column_transformer(encoded_columns_name)
     X = column_transformer.fit_transform(X=x_data_frame)
     feature_names = get_feature_names(column_transformer)
     return [feature_names, X], y
+
+
+def get_column_transformer(encoded_columns_name):
+    return ColumnTransformer([('encoder', OneHotEncoder(drop='first'), encoded_columns_name)],
+                                           remainder='passthrough')
 
 
 def get_feature_names(column_transformer):

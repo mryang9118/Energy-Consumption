@@ -24,12 +24,12 @@ class ModelsFitter(object):
         self.model = None
         self.params_dict = None
 
-    def fit(self, X, y):
-        self.x_matrix = X
-        self.y_matrix = y
-        self.fit_model()
+    def fit(self, x_matrix, y_matrix):
+        self.x_matrix = x_matrix
+        self.y_matrix = y_matrix
+        self.__fit_model()
 
-    def fit_model(self):
+    def __fit_model(self):
         print('------------- Start %s' % time.strftime('%X %x %Z') + ' -------------')
         layers_list, params_dict = read_xml_config(MODEL_CONFIG_PATH, self.model_name)
         self.params_dict = params_dict
@@ -45,11 +45,8 @@ class ModelsFitter(object):
         print('------------- End %s' % time.strftime('%X %x %Z') + ' -------------')
         return self.model
 
-    def predict(self, X):
-        if X is not None:
-            return self.model.predict(X)
-        else:
-            raise Exception('Can not execute "predict()", please Call the fit() method first.')
+    def predict(self, x_matrix):
+        return self.model.predict(x_matrix)
 
     def evaluate_model(self):
         scores_dict = {}

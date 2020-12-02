@@ -3,6 +3,7 @@
 @Description: calculate the feature importance, then decide the best configuration
 @Time:2020/11/4 17:31
 """
+from sklearn.pipeline import make_pipeline
 from ml_models.preprocess import *
 from utils.constants import *
 from sprit_monitor.sprit_monitor_preprocess import *
@@ -21,17 +22,13 @@ X, y = preprocess_data(after_clean, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCOD
 X_train_original, X_test, y_train, y_test = train_test_split(X[1], y, test_size=0.4, shuffle=True)
 
 r2_score_list = []
-options_feature_count = range(1, 12)
+options_feature_count = range(1, 13)
 for i in options_feature_count:
     X_train = X_train_original
     print('-----------Select %s features-----------' % i)
-    pca = PCA(n_components=i)
-    # prepare transform on dataset
-    X_train = pca.fit_transform(X_train)
-    sc = StandardScaler()
-    X_train = sc.fit_transform(X=X_train)
-    model_fitter = ModelsFitter(RF, X_train, y_train)
-    model_fitter.fit_model()
+    model_fitter = ModelsFitter(RF)
+    pipeline = make_pipeline(StandardScaler(), PCA(n_components=i), model_fitter)
+    pipeline.fit(X_train, y_train)
     scores_result = model_fitter.evaluate_model()
     r2_score_list.append(scores_result['r2'])
 
