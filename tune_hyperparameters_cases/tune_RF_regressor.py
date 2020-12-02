@@ -1,10 +1,8 @@
-import warnings
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split, ShuffleSplit, GridSearchCV
 from sklearn.preprocessing import StandardScaler
-from ml_models.preprocess import *
-from utils.constants import *
-from sprit_monitor.sprit_monitor_preprocess import *
+from utils import *
+
 
 warnings.filterwarnings(action="ignore")
 pd.set_option('display.width', 200)

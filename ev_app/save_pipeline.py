@@ -6,11 +6,9 @@
 """
 import joblib
 from sklearn.pipeline import make_pipeline
-from sprit_monitor.sprit_monitor_preprocess import *
 from sklearn.preprocessing import StandardScaler
-from ml_models.preprocess import *
-from utils.constants import *
-from ml_models.parse_models import ModelsFitter
+from ml_models import ModelsFitter
+from utils import *
 
 
 warnings.filterwarnings(action="ignore")
@@ -21,9 +19,9 @@ def save_model(model_name, data_path, X_column_names, Y_column_names, require_en
     X = train_data[X_column_names]
     y = train_data[Y_column_names]
     column_transformer = get_column_transformer(require_encode_columns)
-    pipe_line = make_pipeline(column_transformer, StandardScaler(), ModelsFitter(model_name))
-    pipe_line.fit(X, y)
-    joblib.dump(pipe_line, output_path, compress=3)
+    pipeline = make_pipeline(column_transformer, StandardScaler(), ModelsFitter(model_name))
+    pipeline.fit(X, y)
+    joblib.dump(pipeline, output_path, compress=3)
 
 
 if __name__ == '__main__':

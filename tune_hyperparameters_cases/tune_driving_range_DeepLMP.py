@@ -5,8 +5,7 @@ from sklearn.model_selection import GridSearchCV, ShuffleSplit
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
-from ml_models.preprocess import *
-from utils.constants import *
+from utils import *
 
 
 # Function to create model, required for KerasClassifier

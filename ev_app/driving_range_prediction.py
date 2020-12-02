@@ -9,7 +9,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-from sprit_monitor.sprit_monitor_preprocess import *
+from utils import *
 
 
 def do_kfold(model):

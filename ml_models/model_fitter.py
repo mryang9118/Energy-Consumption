@@ -1,16 +1,12 @@
 """
 @Project: Energy-Consumption
-@Description: support deep MLP, RF... algorithm, read the config from ml_models/models_config.xml
+@Description: support deep MLP, RF... algorithm, read the config from config/models_config.xml
 @Time:2020/9/16 18:07
 
 """
 import time
-from utils.xml_reader import *
-from utils.constants import *
-from ml_models.deep_mlp_models import DeepMLPModel
-from ml_models.machine_learning_models import *
-from ml_models.evaluate_util import *
-from ml_models.visualize_result import *
+from utils import *
+from ml_models import *
 import joblib
 
 MODEL_CONFIG_PATH = "../config/models_config.xml"

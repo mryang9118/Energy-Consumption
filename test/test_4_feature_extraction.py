@@ -4,14 +4,13 @@
 @Time:2020/11/4 17:31
 """
 from sklearn.pipeline import make_pipeline
-from ml_models.preprocess import *
-from utils.constants import *
-from sprit_monitor.sprit_monitor_preprocess import *
+
+from ml_models import ModelsFitter
+from utils import *
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import warnings
 from sklearn.decomposition import PCA
-from ml_models.models_getter import *
 import matplotlib.pyplot as plt
 
 

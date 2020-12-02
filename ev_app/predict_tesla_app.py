@@ -6,13 +6,9 @@
 """
 
 from sklearn.pipeline import make_pipeline
-
-from sprit_monitor.sprit_monitor_preprocess import *
+from utils import *
 from sklearn.preprocessing import StandardScaler
-from ml_models.preprocess import *
-from utils.constants import *
-from ml_models.parse_models import ModelsFitter
-from ml_models.evaluate_util import *
+from ml_models import ModelsFitter
 from sklearn.model_selection import train_test_split
 
 warnings.filterwarnings(action="ignore")
