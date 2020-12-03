@@ -7,7 +7,7 @@
 import os
 import joblib
 import pandas as pd
-from utils import *
+from utils import MODEL_SAVED_PATH
 
 
 def predict(pipeline_path, test_data_frame):
@@ -36,7 +36,6 @@ if __name__ == '__main__':
     header = ['manufacturer', 'version', 'fuel_date', 'trip_distance(km)', 'power(kW)', 'quantity(kWh)', 'tire_type',
               'city', 'motor_way', 'country_roads',	'driving_style', 'consumption(kWh/100km)',
               'A/C', 'park_heating', 'avg_speed(km/h)']
-    MODEL_SAVED_PATH = '../output'
     test_frame = pd.DataFrame(data=input_array, columns=header)
     pipeline_path = '%s/mix_manufactures_pipeline.joblib' % MODEL_SAVED_PATH
     result = predict(pipeline_path, test_frame)
