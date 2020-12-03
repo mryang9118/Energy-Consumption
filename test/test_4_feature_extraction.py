@@ -3,8 +3,7 @@
 @Description: calculate the feature importance, then decide the best configuration
 @Time:2020/11/4 17:31
 """
-from sklearn.pipeline import make_pipeline
-
+from sklearn.pipeline import Pipeline
 from ml_models import ModelsFitter
 from utils import *
 from sklearn.preprocessing import StandardScaler
@@ -26,7 +25,11 @@ for i in options_feature_count:
     X_train = X_train_original
     print('-----------Select %s features-----------' % i)
     model_fitter = ModelsFitter(RF)
-    pipeline = make_pipeline(StandardScaler(), PCA(n_components=i), model_fitter)
+    pipeline = Pipeline([
+         ('decomposer', PCA(n_components=i)),
+         ('scaler', StandardScaler()),
+         ('estimator', model_fitter)
+     ])
     pipeline.fit(X_train, y_train)
     scores_result = model_fitter.evaluate_model()
     r2_score_list.append(scores_result['r2'])

@@ -5,7 +5,7 @@
 
 """
 
-from sklearn.pipeline import make_pipeline
+from sklearn.pipeline import Pipeline
 from utils import *
 from sklearn.preprocessing import StandardScaler
 from ml_models import ModelsFitter
@@ -27,9 +27,13 @@ for i in range(1):
     # train the model, and evaluate
     X_train, X_abandon_test, y_train, y_abandon_test = train_test_split(X, y, test_size=0.1, shuffle=True)
     X_init_test = X_test
-    pipe_line = make_pipeline(get_column_transformer(SPRIT_MONITOR_REQUIRE_ENCODED_COLUMNS), StandardScaler(), ModelsFitter(RF))
-    pipe_line.fit(X_train, y_train)
-    y_pred = pipe_line.predict(X_init_test)
+    pipeline = Pipeline([
+         ('preprocess', get_column_transformer(SPRIT_MONITOR_REQUIRE_ENCODED_COLUMNS)),
+         ('scaler', StandardScaler()),
+         ('estimator', ModelsFitter(RF))
+     ])
+    pipeline.fit(X_train, y_train)
+    y_pred = pipeline.predict(X_init_test)
     print('y test: %s' % str(y_test).replace('\n', ' '))
     print('y prediction: %s' % str(y_pred))
     evaluate_predict_result(y_test, y_pred)

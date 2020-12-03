@@ -5,7 +5,7 @@
  
 """
 
-from sklearn.pipeline import make_pipeline
+from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from ml_models import ModelsFitter
 from utils import *
@@ -22,7 +22,10 @@ for i in range(1):
     print('---------------------------%s time Start---------------------------'% i)
     fitter = ModelsFitter(DEEP_MLP)
     # use the test data for predict, just for example
-    pipeline = make_pipeline(StandardScaler(), fitter)
+    pipeline = Pipeline([
+        ('scaler', StandardScaler()),
+        ('estimator', fitter)
+     ])
     pipeline.fit(X_train, y_train)
     y_pred = pipeline.predict(X_test)
     print('y test: %s' % str(y_test).replace('\n', ' '))
