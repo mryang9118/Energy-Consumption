@@ -15,7 +15,7 @@ warnings.filterwarnings(action="ignore")
 file_path = "../data/mix_e-golf_tesla.csv"
 # preprocess ev data from sprit monitor
 after_clean = clean_ev_data(file_path)
-X, y = preprocess_data(after_clean, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCODED_COLUMNS)
+X, y = preprocess_data(after_clean, SPRIT_MONITOR_X_COLUMN_NAMES, SPRIT_MONITOR_TARGET_COLUMN_NAME, SPRIT_MONITOR_REQUIRE_ENCODED_COLUMNS)
 for i in range(1):
     X_train, X_test, y_train, y_test = train_test_split(X[1], y, test_size=0.2, shuffle=True)
     # train the model, and evaluate

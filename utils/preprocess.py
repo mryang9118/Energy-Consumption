@@ -22,7 +22,7 @@ def preprocess_data(data_frame, x_columns_name, y_column_name, encoded_columns_n
     y = data_frame[y_column_name].values
     column_transformer = get_column_transformer(encoded_columns_name)
     X = column_transformer.fit_transform(X=x_data_frame)
-    feature_names = get_feature_names(column_transformer)
+    feature_names = __get_feature_names(column_transformer)
     return [feature_names, X], y
 
 
@@ -31,7 +31,7 @@ def get_column_transformer(encoded_columns_name):
                                            remainder='passthrough')
 
 
-def get_feature_names(column_transformer):
+def __get_feature_names(column_transformer):
     """Get feature names from all transformers.
     Returns
     -------
@@ -84,7 +84,7 @@ def get_feature_names(column_transformer):
     for name, trans, column, _ in l_transformers:
         if type(trans) == sklearn.pipeline.Pipeline:
             # Recursive call on pipeline
-            _names = get_feature_names(trans)
+            _names = __get_feature_names(trans)
             # if pipeline has no transformer that returns names
             if len(_names) == 0:
                 _names = [name + "__" + f for f in column]

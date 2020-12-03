@@ -7,10 +7,7 @@
 import os
 import joblib
 import pandas as pd
-
-X_COLUMN_NAMES = ['power(kW)', 'quantity(kWh)', 'tire_type', 'city',
-                  'motor_way', 'country_roads', 'driving_style',
-                  'consumption(kWh/100km)', 'A/C', 'park_heating', 'avg_speed(km/h)']
+from utils import *
 
 
 def predict(pipeline_path, test_data_frame):
@@ -26,9 +23,10 @@ def predict(pipeline_path, test_data_frame):
         print("Not found the file, please check the pipeline file path!")
         return
     pipeline = joblib.load(pipeline_path)
-    X_test = test_data_frame[X_COLUMN_NAMES]
     steps_object = pipeline.get_params()['steps']
     hyper_params = steps_object[len(steps_object) - 1][1].get_parameters()
+    X_column_names = steps_object[0][1]._feature_names_in.tolist()
+    X_test = test_data_frame[X_column_names]
     return {'predict': pipeline.predict(X_test), 'hyperparameters': hyper_params}
 
 
@@ -40,7 +38,7 @@ if __name__ == '__main__':
               'A/C', 'park_heating', 'avg_speed(km/h)']
     MODEL_SAVED_PATH = '../output'
     test_frame = pd.DataFrame(data=input_array, columns=header)
-    pipeline_path = '%s/mix_e-golf_tesla_pipeline.joblib' % MODEL_SAVED_PATH
+    pipeline_path = '%s/mix_manufactures_pipeline.joblib' % MODEL_SAVED_PATH
     result = predict(pipeline_path, test_frame)
     print('The hyperparameters of the RF model: %s' % result['hyperparameters'])
     print('The predict result is %s, the actual value is %s' % (result['predict'], test_frame['trip_distance(km)'].values))

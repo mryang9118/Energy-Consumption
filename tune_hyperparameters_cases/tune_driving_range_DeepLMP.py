@@ -29,7 +29,7 @@ new_path = "../data/volkswagen_e_golf_data.csv"
 # load dataset
 dataset = pd.read_csv(filepath_or_buffer=new_path)
 # preprocess dataset
-X, y = preprocess_data(dataset, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCODED_COLUMNS)
+X, y = preprocess_data(dataset, SPRIT_MONITOR_X_COLUMN_NAMES, SPRIT_MONITOR_TARGET_COLUMN_NAME, SPRIT_MONITOR_REQUIRE_ENCODED_COLUMNS)
 
 # create model
 model = KerasRegressor(build_fn=build_regressor, verbose=0)

@@ -25,9 +25,9 @@ def save_model(model_name, data_path, X_column_names, Y_column_names, require_en
 
 
 if __name__ == '__main__':
-    input_path = "../data/mix_e-golf_tesla.csv"
-    input_column_names = X_COLUMN_NAMES
-    target_column_names = Y_COLUMN_NAME
-    encode_column_names = REQUIRE_ENCODED_COLUMNS
-    saved_path = '%s/mix_e-golf_tesla_pipeline.joblib' % MODEL_SAVED_PATH
+    input_path = "../data/all_all_mixed_data_11_12.csv"
+    input_column_names = SPRIT_MONITOR_X_COLUMN_NAMES
+    target_column_names = SPRIT_MONITOR_TARGET_COLUMN_NAME
+    encode_column_names = SPRIT_MONITOR_REQUIRE_ENCODED_COLUMNS
+    saved_path = '%s/mix_manufactures_pipeline.joblib' % MODEL_SAVED_PATH
     save_model(RF, input_path, input_column_names, target_column_names, encode_column_names, saved_path)

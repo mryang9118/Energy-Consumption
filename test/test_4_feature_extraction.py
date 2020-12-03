@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 warnings.filterwarnings(action="ignore")
 data_path = "../data/Volkswagen_2000.csv"
 after_clean = clean_ev_data(data_path)
-X, y = preprocess_data(after_clean, X_COLUMN_NAMES, Y_COLUMN_NAME, REQUIRE_ENCODED_COLUMNS)
+X, y = preprocess_data(after_clean, SPRIT_MONITOR_X_COLUMN_NAMES, SPRIT_MONITOR_TARGET_COLUMN_NAME, SPRIT_MONITOR_REQUIRE_ENCODED_COLUMNS)
 X_train_original, X_test, y_train, y_test = train_test_split(X[1], y, test_size=0.4, shuffle=True)
 
 r2_score_list = []
