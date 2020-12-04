@@ -5,9 +5,7 @@
 
 """
 import time
-
 from sklearn.model_selection import learning_curve
-
 from ml_models.machine_learning_models import random_forest_regress_model
 from ml_models.deep_mlp_models import DeepMLPModel
 from utils.evaluate_util import evaluate_deep_mlp, evaluate_general_model
@@ -34,19 +32,19 @@ class ModelsFitter(object):
         self.__fit_model()
 
     def __fit_model(self):
-        print('------------- Start %s' % time.strftime('%X %x %Z') + ' -------------')
+        print('------------- Start fitting model %s' % time.strftime('%X %x %Z') + ' -------------')
         layers_list, params_dict = read_xml_config(MODEL_CONFIG_PATH, self.model_name)
         self.params_dict = params_dict
         if self.model_name == DEEP_MLP:
             self.model = DeepMLPModel(layers_list, len(self.x_matrix[0]))
-            self.model.compile(optimizer=params_dict.get('optimizer'), loss=params_dict.get('loss'),
-                               metrics=params_dict.get('metrics'))
-            self.model.fit(self.x_matrix, self.y_matrix, batch_size=params_dict.get('batch_size'),
-                           epochs=params_dict.get('epochs'), verbose=0)
+            self.model.compile(optimizer=params_dict.get(OPTIMIZER), loss=params_dict.get(LOSS),
+                               metrics=params_dict.get(METRICS))
+            self.model.fit(self.x_matrix, self.y_matrix, batch_size=params_dict.get(BATCH_SIZE),
+                           epochs=params_dict.get(EPOCHS), verbose=0)
         elif self.model_name == RF:
-            self.model = random_forest_regress_model(params_dict.get('n_estimators'), params_dict.get('criterion'))
+            self.model = random_forest_regress_model(params_dict.get(N_ESTIMATORS), params_dict.get(CRITERION))
             self.model.fit(self.x_matrix, self.y_matrix)
-        print('------------- End %s' % time.strftime('%X %x %Z') + ' -------------')
+        print('------------- End fitting model %s' % time.strftime('%X %x %Z') + ' -------------')
         return self.model
 
     def predict(self, x_matrix):
@@ -55,10 +53,10 @@ class ModelsFitter(object):
     def evaluate_model(self):
         scores_dict = {}
         if self.model_name == DEEP_MLP:
-            scores_dict = evaluate_deep_mlp(self.model, self.x_matrix, self.y_matrix, self.params_dict.get('metrics'))
+            scores_dict = evaluate_deep_mlp(self.model, self.x_matrix, self.y_matrix, self.params_dict.get(METRICS))
         elif self.model_name == RF:
             scores_dict = evaluate_general_model(self.model, x=self.x_matrix, y=self.y_matrix,
-                                                 scoring=self.params_dict.get('scoring_methods'))
+                                                 scoring=self.params_dict.get(SCORING_METHODS))
         return scores_dict
 
     def get_model_name(self):
@@ -70,18 +68,20 @@ class ModelsFitter(object):
     def get_parameters(self):
         return self.params_dict
 
-    def save_model(self):
+    def save_model(self, output_path=MODEL_SAVED_PATH):
         if self.model_name == DEEP_MLP:
             # sub model should assign parameter save_format
-            self.model.save('%s/%s_model' % (MODEL_SAVED_PATH, str(self.model_name).lower()), save_format="tf")
+            self.model.save('%s/%s_%s' % (output_path, str(self.model_name).lower(),
+                                          MODEL_SUFFIX), save_format="tf")
         else:
             # apply to any model from scikit-learn
-            joblib.dump(self.model, '%s/%s_model.joblib' % (MODEL_SAVED_PATH, str(self.model_name).lower()), compress=3)
+            joblib.dump(self.model, '%s/%s_%s' % (output_path, str(self.model_name).lower(),
+                                                  MODEL_SUFFIX), compress=3)
         print("---Save %s model to %s_model.* file.---" % (self.model_name, str(self.model_name).lower()))
 
     def plot_learning_curve(self, cv=10):
         if self.model_name == DEEP_MLP:
-            print('Not support Deep MLP model yet.')
+            print('Not support to plot Deep MLP model learning curve yet.')
             return
         sizes, training_scores, testing_scores = learning_curve(self.model, self.x_matrix, self.y_matrix, cv=cv,
                                                                 train_sizes=np.linspace(0.1, 1.0, 10), n_jobs=1)
@@ -92,4 +92,4 @@ class ModelsFitter(object):
             importance = self.model.feature_importances_
             plot_feature_importance(importance, feature_names)
         else:
-            print('Not support %s model yet.' % self.model_name)
+            print('Not support to evaluate %s model feature importance yet.' % self.model_name)

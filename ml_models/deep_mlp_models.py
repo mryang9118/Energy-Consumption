@@ -1,6 +1,6 @@
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Dense
-
+from utils import *
 refs = locals()
 
 
@@ -12,7 +12,7 @@ class DeepMLPModel(Model):
             refs[vars_list[i]] = dense_object_list[i]
 
     def get_config(self):
-        return {"input_dim": self.input_dim, "layers": self.dense_object_list}
+        return {INPUT_DIM: self.input_dim, LAYERS: self.dense_object_list}
 
     def __init__(self, layers_list, input_dim):
         super(DeepMLPModel, self).__init__(name="custom_deep_mlp_model")
@@ -22,13 +22,12 @@ class DeepMLPModel(Model):
         for single_layer in layers_list:
             index = layers_list.index(single_layer)
 
-            dense = Dense(units=single_layer.get('units'),
-                          kernel_initializer=single_layer.get('kernel_initializer'),
-                          activation=single_layer.get('activation'), input_dim=input_dim) if \
-                index == 0 else Dense(units=single_layer.get('units'),
-                                      kernel_initializer=single_layer.get(
-                                          'kernel_initializer'),
-                                      activation=single_layer.get('activation'))
+            dense = Dense(units=single_layer.get(UNITS),
+                          kernel_initializer=single_layer.get(KERNEL_INITIALIZER),
+                          activation=single_layer.get(ACTIVATION), input_dim=input_dim) if \
+                index == 0 else Dense(units=single_layer.get(UNITS),
+                                      kernel_initializer=single_layer.get(KERNEL_INITIALIZER),
+                                      activation=single_layer.get(ACTIVATION))
             self.dense_object_list.append(dense)
             self.vars_list.append('layer_%s' % (index + 1))
         self.set_vars(self.dense_object_list, self.vars_list)

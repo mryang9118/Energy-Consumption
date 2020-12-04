@@ -1,6 +1,7 @@
 from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor
 from sklearn.neural_network import MLPRegressor
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
+from utils import BATCH_SIZE, EPOCHS
 
 
 def random_forest_regress_model(n_estimators, criterion="mae", oob_score=True, warm_start=False):
@@ -20,8 +21,8 @@ def mlp_regress_model(hidden_layer_sizes, max_iter, n_iter_no_change, activation
 
 
 def deep_mlp_model(build_fn, param_dict):
-    return KerasRegressor(build_fn=build_fn, batch_size=param_dict.get('batch_size'),
-                          epochs=param_dict.get('epochs'), verbose=False)
+    return KerasRegressor(build_fn=build_fn, batch_size=param_dict.get(BATCH_SIZE),
+                          epochs=param_dict.get(EPOCHS), verbose=False)
 
 
 

@@ -15,7 +15,7 @@ import os
 warnings.filterwarnings(action="ignore")
 
 
-def save_pipeline(model_name, data_path, sep=",",
+def save_pipeline(model_name, data_path, sep=COMMA,
                   X_column_names=SPRIT_MONITOR_X_COLUMN_NAMES,
                   Y_column_names=SPRIT_MONITOR_TARGET_COLUMN_NAME,
                   require_encode_columns=SPRIT_MONITOR_REQUIRE_ENCODED_COLUMNS,
@@ -50,7 +50,7 @@ def save_pipeline(model_name, data_path, sep=",",
 
 def __pickle_pipeline(model_name, pipeline, output_path):
     if model_name == DEEP_MLP:
-        pipeline.named_steps[ESTIMATOR].save_model()
+        pipeline.named_steps[ESTIMATOR].save_model(output_path=output_path)
         pipeline.named_steps[ESTIMATOR].model = None
     joblib.dump(pipeline, '%s/%s_%s' % (output_path, model_name, PIPELINE_FILE_SUFFIX), compress=3)
 
@@ -83,12 +83,13 @@ def predict(model_name, pipeline_folder_path, test_data_frame):
 
 if __name__ == '__main__':
     # save pipeline to disk
-    selected_model = DEEP_MLP
+    selected_model = RF
     input_path = "../data/mix_e-golf_tesla.csv"
     save_pipeline(selected_model, input_path)
+
     # prepare test data
-    input_array = [['Volkswagen', 'E-Golf 300', '06.01.2019', 28, 100, 10.2, 'Summer tires', 1,	0,	1, 'Moderate',
-                   24.6, 1, 1, 29]]
+    input_array = [['Volkswagen', 'E-Golf 300', '06.01.2019', 28, 100, 10.2, 'Summer tires', 1, 0, 1, 'Moderate',
+                    24.6, 1, 1, 29]]
     test_frame = pd.DataFrame(data=input_array, columns=SPRIT_MONITOR_HEADER)
     result = predict(selected_model, MODEL_SAVED_PATH, test_frame)
     print('The hyperparameters of the %s model: %s' % (selected_model, result[HYPER_PARAMETERS]))
