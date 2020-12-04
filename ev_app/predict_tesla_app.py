@@ -28,9 +28,9 @@ for i in range(1):
     X_train, X_abandon_test, y_train, y_abandon_test = train_test_split(X, y, test_size=0.1, shuffle=True)
     X_init_test = X_test
     pipeline = Pipeline([
-         ('preprocess', get_column_transformer(SPRIT_MONITOR_REQUIRE_ENCODED_COLUMNS)),
-         ('scaler', StandardScaler()),
-         ('estimator', ModelsFitter(RF))
+         (PREPROCESS, get_column_transformer(SPRIT_MONITOR_REQUIRE_ENCODED_COLUMNS)),
+         (STANDARD_SCALAR, StandardScaler()),
+         (ESTIMATOR, ModelsFitter(RF))
      ])
     pipeline.fit(X_train, y_train)
     y_pred = pipeline.predict(X_init_test)

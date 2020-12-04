@@ -17,8 +17,8 @@ after_clean = clean_ev_data(data_path)
 X, y = preprocess_data(after_clean, SPRIT_MONITOR_X_COLUMN_NAMES, SPRIT_MONITOR_TARGET_COLUMN_NAME, SPRIT_MONITOR_REQUIRE_ENCODED_COLUMNS)
 model_fitter = ModelsFitter(RF)
 pipeline = Pipeline([
-        ('scaler', StandardScaler()),
-        ('estimator', model_fitter)
+        (STANDARD_SCALAR, StandardScaler()),
+        (ESTIMATOR, model_fitter)
     ])
 pipeline.fit(X[1], y)
 # model_fitter.plot_learning_curve()
